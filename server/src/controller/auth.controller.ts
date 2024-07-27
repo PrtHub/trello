@@ -9,7 +9,7 @@ export const signup = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { email, password } = req.body;
+  const {fullname, email, password } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -18,7 +18,7 @@ export const signup = async (
 
   try {
     const hashedPassword = bcrypt.hashSync(password, 10);
-    const newUser = new User({ email, password: hashedPassword });
+    const newUser = new User({fullname, email, password: hashedPassword });
     await newUser.save();
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {

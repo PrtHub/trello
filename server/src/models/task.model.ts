@@ -20,7 +20,7 @@ const TaskSchema: Schema = new Schema({
   priority: { type: String, enum: ["Low", "Medium", "Urgent"] },
   deadline: { type: Date },
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-});
+},{ timestamps: true });
 
 const Task = mongoose.model<ITask>("Task", TaskSchema);
 
