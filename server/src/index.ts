@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route";
 import taskRouter from "./routes/task.route";
 
@@ -19,14 +19,20 @@ mongoose
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/task", taskRouter);
 
-app.use((
+app.use(
+  (
     err: any,
     req: express.Request,
     res: express.Response,

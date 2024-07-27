@@ -9,7 +9,7 @@ export const signup = async (
   res: Response,
   next: NextFunction
 ) => {
-  const {fullname, email, password } = req.body;
+  const { fullname, email, password } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -18,9 +18,9 @@ export const signup = async (
 
   try {
     const hashedPassword = bcrypt.hashSync(password, 10);
-    const newUser = new User({fullname, email, password: hashedPassword });
+    const newUser = new User({ fullname, email, password: hashedPassword });
     await newUser.save();
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json(newUser);
   } catch (error) {
     next(error);
   }
@@ -44,20 +44,26 @@ export const signin = async (
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string);
 
-    res.cookie("trello_token", token, {
+    res.cookie('trello_token', token, {
       httpOnly: true,
-      secure: true
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax', 
+      maxAge: 3600000,
     });
-
-    res.json({ message: "Signin successful" });
+  
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }
 };
 
-export const signout = async (req: Request, res: Response, next: NextFunction) => {
-    res.clearCookie('trello_token');
-    res.json({ message: 'Sign out successfully' });
+export const signout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res.clearCookie("trello_token");
+  res.json({ message: "Sign out successfully" });
 };
 
 // export const google = async () => {};
