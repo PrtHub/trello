@@ -45,10 +45,7 @@ const SignIn = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signin`,
-        values
-      );
+      const response = await axiosInstance.post(`/api/auth/signin`, values);
       dispatch(setCurrentUser(response.data));
       toast.success("User signed in successfully");
       router.push("/");

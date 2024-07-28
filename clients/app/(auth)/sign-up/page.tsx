@@ -46,10 +46,7 @@ const SignUp = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`,
-        values
-      );
+      await axiosInstance.post(`/api/auth/signup`, values);
       toast.success("User signed up successfully");
       router.push("/sign-in");
     } catch (error: any) {
