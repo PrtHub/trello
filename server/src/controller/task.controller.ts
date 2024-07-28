@@ -149,3 +149,34 @@ export const getTasksByStatus = async (
     next(error);
   }
 };
+
+export const getTaskById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return next(errorHandler(401, "Unauthorized"));
+  }
+
+  try {
+    const task = await Task.findById(id);
+
+    if (!task) {
+      return next(errorHandler(404, "Task not found"));
+    }
+
+    if (task.userId.toString() !== userId.toString()) {
+      return next(
+        errorHandler(403, "You do not have permission to view this task")
+      );
+    }
+
+    res.status(200).json(task);
+  } catch (error) {
+    next(error);
+  }
+};
