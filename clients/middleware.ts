@@ -1,23 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get("trello_token");
-  const url = request.nextUrl.clone();
+export function middleware(req: NextRequest) {
+  const token = req.cookies.get("trello_token");
+  const { pathname } = req.nextUrl;
 
-  if (!token) {
-    if (url.pathname !== "/sign-in" && url.pathname !== "/sign-up") {
-      url.pathname = "/sign-in";
-      return NextResponse.redirect(url);
-    }
-  } else {
-    if (url.pathname === "/sign-in" || url.pathname === "/sign-up") {
-      url.pathname = "/";
-      return NextResponse.redirect(url);
-    }
+  const publicRoutes = ["/sign-in", "/sign-up"];
+
+  if (!token && !publicRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL("/sign-in", req.url));
   }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/", "/sign-in", "/sign-up"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
