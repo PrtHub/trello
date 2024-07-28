@@ -32,12 +32,12 @@ const Header = () => {
   };
 
   return (
-    <header className="flex justify-between items-center py-4 bg-black-1 px-10">
+    <header className="flex justify-between items-center py-4 bg-black-1 px-5">
       <h1 className="text-white-1 text-2xl font-bold">Trello</h1>
       <span className="flex items-center gap-5">
         <Button
           onClick={handleSignout}
-          className="bg-black-6 hover:bg-black-5 transition font-medium"
+          className="bg-orange-1 hover:bg-orange-1/80 transition font-medium"
           disabled={isSigningOut}
         >
           {isSigningOut ? (
