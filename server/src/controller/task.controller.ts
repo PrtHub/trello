@@ -8,7 +8,7 @@ export const createTask = async (
   next: NextFunction
 ) => {
   const { title, description, status, priority, deadline } = req.body;
-  const userId = req.user?.id;
+  const userId = (req as any).user?.id;
 
   if (!userId) {
     return next(errorHandler(401, "Unauthorized!"));
@@ -37,7 +37,7 @@ export const editTask = async (
 ) => {
   const { id } = req.params;
   const { title, description, status, priority, deadline } = req.body;
-  const userId = req.user?.id;
+  const userId = (req as any).user?.id;
 
   if (!userId) {
     return next(errorHandler(401, "Unauthorized"));
@@ -80,7 +80,7 @@ export const deleteTask = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const userId = req.user?.id;
+  const userId = (req as any).user?.id;
 
   if (!userId) {
     return next(errorHandler(401, "Unauthorized"));
@@ -112,7 +112,7 @@ export const getAllTask = async (
   res: Response,
   next: NextFunction
 ) => {
-  const userId = req.user?.id;
+  const userId = (req as any).user?.id;
 
   if (!userId) {
     return next(errorHandler(401, "Unauthorized"));
@@ -132,7 +132,7 @@ export const getTasksByStatus = async (
   next: NextFunction
 ) => {
   const { status } = req.params;
-  const userId = req.user?.id;
+  const userId = (req as any).user?.id;
 
   if (!userId) {
     return next(errorHandler(401, "Unauthorized"));
@@ -156,7 +156,7 @@ export const getTaskById = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const userId = req.user?.id;
+  const userId = (req as any).user?.id;
 
   if (!userId) {
     return next(errorHandler(401, "Unauthorized"));
