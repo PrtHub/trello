@@ -33,7 +33,8 @@ const Header = () => {
   };
 
   return (
-    <header className="flex justify-between items-center py-4 bg-black-1 px-5">
+    <header className="py-4 bg-black-1 px-5">
+      <div className="w-full max-w-[1440px] mx-auto flex justify-between items-center">     
       <h1 className="text-white-1 text-2xl font-bold">Trello</h1>
       <span className="flex items-center gap-5">
         <Button
@@ -62,6 +63,7 @@ const Header = () => {
           />
         )}
       </span>
+      </div>
     </header>
   );
 };

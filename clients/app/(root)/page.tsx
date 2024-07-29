@@ -164,7 +164,7 @@ const Dashboard = () => {
 
   return (
     <main className="max-w-[1440px] mx-auto w-full flex flex-col gap-10 items-start px-5 py-5">
-      <h1 className="text-white-1 font-semibold text-3xl">Manage Your Tasks</h1>
+      <h1 className="text-white-1 font-semibold text-3xl text-left">Manage Your Tasks</h1>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable
           droppableId="droppable-columns"
