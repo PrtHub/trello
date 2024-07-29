@@ -1,30 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
-import TaskForm from "@/components/TaskForm";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosInstance";
 import toast from "react-hot-toast";
-import { Badge } from "@/components/ui/badge";
-import { Clock, Edit, Trash2 } from "lucide-react";
-import { formatDeadline } from "@/lib/format";
-import EditTaskForm from "@/components/EditTaskForm";
-
-interface Task {
-  _id: string;
-  title: string;
-  description?: string;
-  status: "To-Do" | "In-Progress" | "Under-Review" | "Completed";
-  priority?: "Low" | "Medium" | "Urgent";
-  deadline?: Date | null;
-}
+import TaskColumn from "@/components/TaskColumn";
+import { Task } from "@/types";
 
 const Dashboard = () => {
-  const [tasks, setTasks] = useState<{
-    [key: string]: Task[];
-  }>({
+  const [tasks, setTasks] = useState<{ [key: string]: Task[] }>({
     "To-Do": [],
     "In-Progress": [],
     "Under-Review": [],
@@ -94,10 +77,15 @@ const Dashboard = () => {
 
   const handleTaskEdit = async (id: string, updatedTask: Omit<Task, "_id">) => {
     try {
-      const response = await axiosInstance.put(`/api/task/edit/${id}`, updatedTask);
+      const response = await axiosInstance.put(
+        `/api/task/edit/${id}`,
+        updatedTask
+      );
       const editedTask = {
         ...response.data,
-        deadline: response.data.deadline ? new Date(response.data.deadline) : null,
+        deadline: response.data.deadline
+          ? new Date(response.data.deadline)
+          : null,
       };
       setTasks((prevTasks) => {
         const updatedTasks = prevTasks[editedTask.status].map((task) =>
@@ -121,16 +109,49 @@ const Dashboard = () => {
     }
   };
 
-  const getBadgeColor = (priority: "Low" | "Medium" | "Urgent" | undefined) => {
-    switch (priority) {
-      case "Low":
-        return "bg-green-600";
-      case "Medium":
-        return "bg-yellow-600";
-      case "Urgent":
-        return "bg-red-600";
-      default:
-        return "";
+  const handleDragEnd = async (result: any) => {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const movedTask = tasks[source.droppableId].find(
+      (task) => task._id === draggableId
+    );
+
+    if (!movedTask) return;
+
+    const updatedStatus = destination.droppableId as Task["status"];
+
+    try {
+      await axiosInstance.put(`/api/task/edit/${draggableId}`, {
+        ...movedTask,
+        status: updatedStatus,
+      });
+
+      const updatedTasks = {
+        ...tasks,
+        [source.droppableId]: tasks[source.droppableId].filter(
+          (task) => task._id !== draggableId
+        ),
+        [updatedStatus]: [
+          ...tasks[updatedStatus],
+          { ...movedTask, status: updatedStatus },
+        ],
+      };
+
+      setTasks(updatedTasks);
+    } catch (error: any) {
+      console.error("Error updating task status:", error.response.data);
+      toast.error("Failed to update task status");
     }
   };
 
@@ -139,78 +160,14 @@ const Dashboard = () => {
       <h1 className="text-white-1 font-semibold text-3xl">Manage Your Tasks</h1>
       <section className="w-full h-full flex items-start justify-center flex-wrap gap-10">
         {["To-Do", "In-Progress", "Under-Review", "Completed"].map((status) => (
-          <div
+          <TaskColumn
             key={status}
-            className="w-[300px] flex flex-col items-start justify-start gap-5 bg-black-1 border border-black-2 p-5 rounded"
-          >
-            <h1 className="text-white-2 text-xl font-medium ">
-              {status.replace(/-/g, " ")}
-            </h1>
-            <section className="flex flex-col gap-2 w-full">
-              {tasks[status]?.map((task) => (
-                <div
-                  key={task._id}
-                  className="bg-black-3 text-white-1 p-2 rounded w-full h-fit space-y-2 relative"
-                >
-                  <h2 className="text-white-1 text-base font-medium pr-3">
-                    {task.title}
-                  </h2>
-                  {task.description && (
-                    <p className="text-gray-1 text-sm pr-3">{task.description}</p>
-                  )}
-                  {task.priority && (
-                    <Badge
-                      className={`${getBadgeColor(task.priority)} text-white-1`}
-                    >
-                      {task.priority}
-                    </Badge>
-                  )}
-                  {task.deadline && (
-                    <span className="flex items-center gap-1">
-                      <Clock className="text-gray-1 size-4 " />
-                      <p className="text-sm text-gray-1">
-                        {formatDeadline(task.deadline)}
-                      </p>
-                    </span>
-                  )}
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <Edit className="absolute -top-1 right-1 text-white-1 size-4 cursor-pointer" />
-                    </SheetTrigger>
-                    <SheetContent
-                      side="right"
-                      className="px-5 py-10 bg-black-1 border-none"
-                    >
-                      <EditTaskForm
-                        taskId={task._id}
-                        onEdit={(updatedTask) => handleTaskEdit(task._id, updatedTask)}
-                      />
-                    </SheetContent>
-                  </Sheet>
-                  <Trash2
-                    onClick={() => handleTaskDelete(task._id, task.status)}
-                    className="absolute top-6 right-1 text-white-1 size-4 cursor-pointer"
-                  />
-                </div>
-              ))}
-            </section>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button className="w-full bg-orange-1 font-semibold hover:bg-orange-1/80 transition">
-                  Add New+
-                </Button>
-              </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="px-5 py-10 bg-black-1 border-none"
-              >
-                <TaskForm
-                  initialStatus={status as Task["status"]}
-                  onSubmit={handleTaskCreate}
-                />
-              </SheetContent>
-            </Sheet>
-          </div>
+            status={status as Task["status"]}
+            tasks={tasks[status]}
+            onTaskCreate={handleTaskCreate}
+            onTaskEdit={handleTaskEdit}
+            onTaskDelete={handleTaskDelete}
+          />
         ))}
       </section>
     </main>

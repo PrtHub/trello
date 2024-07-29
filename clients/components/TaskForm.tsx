@@ -24,7 +24,6 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import axiosInstance from "@/lib/axiosInstance";
 import toast from "react-hot-toast";
 
 const taskSchema = z.object({
@@ -38,7 +37,7 @@ const taskSchema = z.object({
 type TaskSchema = z.infer<typeof taskSchema>;
 
 interface TaskFormProps {
-  onSubmit: (task: Omit<TaskSchema, "id">) => Promise<void>;
+  onSubmit: (task: Omit<TaskSchema, "_id">) => Promise<void>;
   initialStatus?: "To-Do" | "In-Progress" | "Under-Review" | "Completed";
   initialData?: Partial<TaskSchema>;
 }

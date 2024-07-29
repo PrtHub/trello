@@ -26,15 +26,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
 import axiosInstance from "@/lib/axiosInstance";
-
-interface Task {
-  _id: string;
-  title: string;
-  description?: string;
-  status: "To-Do" | "In-Progress" | "Under-Review" | "Completed";
-  priority?: "Low" | "Medium" | "Urgent";
-  deadline?: Date | null;
-}
+import { Task } from "@/types";
 
 const taskSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -47,7 +39,7 @@ const taskSchema = z.object({
 type TaskSchema = z.infer<typeof taskSchema>;
 
 interface EditTaskFormProps {
-    onEdit: (task: Omit<TaskSchema, "id">) => Promise<void>;
+  onEdit: (task: Omit<TaskSchema, "_id">) => Promise<void>;
   taskId: string;
 }
 
@@ -81,7 +73,7 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({ onEdit, taskId }) => {
     };
 
     fetchTaskById();
-  }, [taskId]);
+  }, [taskId, task?.status]);
 
   const form = useForm<TaskSchema>({
     resolver: zodResolver(taskSchema),
@@ -150,7 +142,7 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({ onEdit, taskId }) => {
             <FormItem>
               <FormLabel className="text-white-2">Status</FormLabel>
               <FormControl>
-                <Select {...field}>
+                <Select {...field} onValueChange={field.onChange}>
                   <SelectTrigger className="w-full bg-black-3 text-white-2">
                     <SelectValue
                       className="text-white-2 placeholder:text-white-2"
