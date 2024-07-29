@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route";
 import taskRouter from "./routes/task.route";
 
-const PORT = process.env.PORT || 5000;
+const Port = process.env.PORT || 5000;
 
 dotenv.config();
 
@@ -47,6 +47,6 @@ app.use(
   }
 );
 
-app.listen(PORT, () => {
+app.listen(Port, () => {
   console.log("Server listening on port 5000");
 });
