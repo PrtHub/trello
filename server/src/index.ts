@@ -8,8 +8,6 @@ import taskRouter from "./routes/task.route";
 
 dotenv.config();
 
-const port = process.env.PORT || 5000;
-
 mongoose
   .connect(process.env.MONGODB_URL as string)
   .then(() => {
@@ -47,6 +45,7 @@ app.use(
   }
 );
 
+const port = 5000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
