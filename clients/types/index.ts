@@ -17,6 +17,7 @@ export interface TaskColumnProps {
 
 export interface TaskCardProps {
   task: Task;
+  index: number;
   onEdit: (id: string, updatedTask: Omit<Task, "_id">) => Promise<void>;
   onDelete: (id: string, status: Task["status"]) => void;
 }

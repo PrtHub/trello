@@ -5,6 +5,12 @@ import axiosInstance from "@/lib/axiosInstance";
 import toast from "react-hot-toast";
 import TaskColumn from "@/components/TaskColumn";
 import { Task } from "@/types";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "@hello-pangea/dnd";
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState<{ [key: string]: Task[] }>({
@@ -109,7 +115,7 @@ const Dashboard = () => {
     }
   };
 
-  const handleDragEnd = async (result: any) => {
+  const handleDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
     if (!destination) {
@@ -156,20 +162,47 @@ const Dashboard = () => {
   };
 
   return (
-    <main className="max-w-[1440px] mx-auto w-full flex flex-col gap-10 items-start px-5">
+    <main className="max-w-[1440px] mx-auto w-full flex flex-col gap-10 items-start px-5 py-5">
       <h1 className="text-white-1 font-semibold text-3xl">Manage Your Tasks</h1>
-      <section className="w-full h-full flex items-start justify-center flex-wrap gap-10">
-        {["To-Do", "In-Progress", "Under-Review", "Completed"].map((status) => (
-          <TaskColumn
-            key={status}
-            status={status as Task["status"]}
-            tasks={tasks[status]}
-            onTaskCreate={handleTaskCreate}
-            onTaskEdit={handleTaskEdit}
-            onTaskDelete={handleTaskDelete}
-          />
-        ))}
-      </section>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable
+          droppableId="droppable-columns"
+          direction="horizontal"
+        >
+          {(provided) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="w-full h-full flex items-start justify-center flex-wrap gap-10"
+            >
+              {["To-Do", "In-Progress", "Under-Review", "Completed"].map((status, index) => (
+                <Draggable
+                  key={status}
+                  draggableId={status}
+                  index={index}
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <TaskColumn
+                        status={status as Task["status"]}
+                        tasks={tasks[status]}
+                        onTaskCreate={handleTaskCreate}
+                        onTaskEdit={handleTaskEdit}
+                        onTaskDelete={handleTaskDelete}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </main>
   );
 };
