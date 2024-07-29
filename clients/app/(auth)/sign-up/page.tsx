@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import axiosInstance from "@/lib/axiosInstance";
+import GoogleAuth from "@/components/GoogleAuth";
 
 const formSchema = z.object({
   fullname: z.string().min(2, {
@@ -136,6 +137,7 @@ const SignUp = () => {
           </Button>
         </form>
       </Form>
+      <GoogleAuth/>
       <span className="text-white-1 font-medium flex items-center gap-1 text-sm">
         Already have an account?{" "}
         <Link

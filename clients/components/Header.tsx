@@ -9,6 +9,7 @@ import { clearCurrentUser } from "@/redux/user-slice";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 
 const Header = () => {
   const router = useRouter();
@@ -46,9 +47,20 @@ const Header = () => {
             "Sign out"
           )}
         </Button>
-        <span className="flex items-center justify-center w-8 h-8 bg-gray-1 text-white-1 rounded-full">
-          {currentUser?.fullname?.charAt(0).toUpperCase()}
-        </span>
+        {currentUser.avatar ===
+        "https://img.icons8.com/tiny-color/32/000000/test-account.png" ? (
+          <span className="flex items-center justify-center w-8 h-8 bg-gray-1 text-white-1 rounded-full">
+            {currentUser?.fullname?.charAt(0).toUpperCase()}
+          </span>
+        ) : (
+          <Image
+            src={currentUser.avatar}
+            width={35}
+            height={35}
+            alt="avatar"
+            className="rounded-full"
+          />
+        )}
       </span>
     </header>
   );

@@ -22,6 +22,7 @@ import { Loader2 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "@/redux/user-slice";
 import axiosInstance from "@/lib/axiosInstance";
+import GoogleAuth from "@/components/GoogleAuth";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -119,6 +120,7 @@ const SignIn = () => {
           </Button>
         </form>
       </Form>
+      <GoogleAuth/>
       <span className="text-white-1 font-medium flex items-center gap-1 text-sm">
         Don&apos;t have an account?{" "}
         <Link
