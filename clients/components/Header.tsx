@@ -48,7 +48,7 @@ const Header = () => {
             "Sign out"
           )}
         </Button>
-        {currentUser.avatar ===
+        {currentUser?.avatar ===
         "https://img.icons8.com/tiny-color/32/000000/test-account.png" ? (
           <span className="flex items-center justify-center w-8 h-8 bg-gray-1 text-white-1 rounded-full">
             {currentUser?.fullname?.charAt(0).toUpperCase()}
