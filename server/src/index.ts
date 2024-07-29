@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route";
 import taskRouter from "./routes/task.route";
 
+const PORT = process.env.PORT || 5000;
+
 dotenv.config();
 
 mongoose
@@ -21,7 +23,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL as string,
     credentials: true,
   })
 );
@@ -45,6 +47,6 @@ app.use(
   }
 );
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
   console.log("Server listening on port 5000");
 });
