@@ -47,7 +47,7 @@ export const signin = async (
     res.cookie("trello_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 3600000,
     });
 
@@ -62,7 +62,11 @@ export const signout = async (
   res: Response,
   next: NextFunction
 ) => {
-  res.clearCookie("trello_token");
+  res.clearCookie("trello_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
   res.json({ message: "Sign out successfully" });
 };
 
@@ -81,7 +85,7 @@ export const google = async (
       res.cookie("trello_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 3600000,
       });
       res.status(200).json(rest);
@@ -105,7 +109,7 @@ export const google = async (
       res.cookie("trello_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 3600000,
       });
 
