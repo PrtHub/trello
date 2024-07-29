@@ -51,7 +51,7 @@ const SignUp = () => {
       toast.success("User signed up successfully");
       router.push("/sign-in");
     } catch (error: any) {
-      console.error("Signup error:", error.response.data);
+      console.error("Signup error:", error?.response?.data);
       if (
         error.response &&
         error.response.data &&

@@ -55,7 +55,7 @@ const Header = () => {
           </span>
         ) : (
           <Image
-            src={currentUser.avatar}
+            src={currentUser?.avatar}
             width={35}
             height={35}
             alt="avatar"

@@ -21,7 +21,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL as string,
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
@@ -30,6 +30,11 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/task", taskRouter);
+
+app.options("*", cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+}));
 
 app.use(
   (
