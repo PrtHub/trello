@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import TaskForm from "@/components/TaskForm";
 import TaskCard from "./TaskCard";
-import { Task, TaskColumnProps } from "@/types";
+import { TaskColumnProps } from "@/types";
 import { Droppable } from "@hello-pangea/dnd";
 
 const TaskColumn = ({

@@ -74,7 +74,7 @@ const Dashboard = () => {
         );
         return { ...prevTasks, [status]: updatedTasks };
       });
-      toast.success("Task deleted successfully");
+      toast.success("Task deleted!");
     } catch (error: any) {
       console.error("Error deleting task:", error.response.data);
       toast.error("Failed to delete task");
@@ -108,7 +108,7 @@ const Dashboard = () => {
         }
         return { ...prevTasks, [editedTask.status]: updatedTasks };
       });
-      toast.success("Task updated successfully");
+      toast.success("Task updated!");
     } catch (error: any) {
       console.error("Error editing task:", error.response.data);
       toast.error("Failed to update task");
@@ -155,6 +155,7 @@ const Dashboard = () => {
       };
 
       setTasks(updatedTasks);
+      toast.success("Task position updated!");
     } catch (error: any) {
       console.error("Error updating task status:", error.response.data);
       toast.error("Failed to update task status");

@@ -64,7 +64,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
     setIsLoading(true);
     try {
       await onSubmit(values);
-      toast.success("Task created successfully");
+      toast.success("Task created!");
     } catch (error) {
       console.error("Error creating task:", error);
       toast.error("An unexpected error occurred.");
