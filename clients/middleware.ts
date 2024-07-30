@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('trello_token');
   
-  if (!token && !request.nextUrl.pathname.startsWith('/sign-in') && !request.nextUrl.pathname.startsWith('/signup')) {
+  if (!token && !request.nextUrl.pathname.startsWith('/sign-in') && !request.nextUrl.pathname.startsWith('/sign-up')) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
   }
   
