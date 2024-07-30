@@ -36,7 +36,6 @@ const Dashboard = () => {
         `Error fetching tasks for status ${status}:`,
         error?.response?.data
       );
-      toast.error("Failed to fetch tasks");
     }
   };
 

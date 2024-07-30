@@ -119,3 +119,26 @@ export const google = async (
     next(error);
   }
 };
+
+export const getUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = (req as any).user;
+
+    if (!user) {
+      return next(errorHandler(401, "User not authenticated"));
+    }
+
+    const foundUser = await User.findById(user.id).select("-password");
+    if (!foundUser) {
+      return next(errorHandler(404, "User not found"));
+    }
+
+    res.status(200).json(foundUser);
+  } catch (error) {
+    next(error);
+  }
+};

@@ -1,17 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
+// middleware.ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import jwt from "jsonwebtoken";
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('trello_token');
-  
-  if (!token && !request.nextUrl.pathname.startsWith('/sign-in') && !request.nextUrl.pathname.startsWith('/sign-up')) {
-    return NextResponse.redirect(new URL('/sign-in', request.url));
+  const pathname = request.nextUrl.pathname;
+
+  if (pathname === "/sign-in" || pathname === "/sign-up") {
+    return NextResponse.next();
   }
-  
-  if (token && (request.nextUrl.pathname.startsWith('/sign-in') || request.nextUrl.pathname.startsWith('/sign-up'))) {
-    return NextResponse.redirect(new URL('/', request.url));
+  const token = request.cookies.get("trello_token")?.value;
+
+  if (token) {
+    try {
+      jwt.verify(token, process.env.JWT_SECRET as string);
+      return NextResponse.redirect(new URL('/', request.url));
+    } catch (error) {
+        return NextResponse.next();
+    }
+  } else {
+    return NextResponse.next();
   }
 }
 
 export const config = {
-  matcher: ['/', '/sign-in', '/sign-up'],
+  matcher: ["/", '/sign-in', '/sign-up']
 };

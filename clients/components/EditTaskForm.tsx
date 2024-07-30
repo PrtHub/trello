@@ -68,7 +68,6 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({ onEdit, taskId }) => {
         });
       } catch (error: any) {
         console.error("Error fetching task:", error.response.data);
-        toast.error("Failed to fetch task");
       }
     };
 
