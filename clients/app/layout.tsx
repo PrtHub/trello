@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import ReduxProvider from "@/redux/redux-provider";
-import UserAuth from "@/components/UserAuth";
-import PrivateRoute from "@/components/PrivateRoute";
 
 const inter = Inter({ subsets: ["latin"] });
 
