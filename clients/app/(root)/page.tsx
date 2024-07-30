@@ -34,7 +34,7 @@ const Dashboard = () => {
     } catch (error: any) {
       console.error(
         `Error fetching tasks for status ${status}:`,
-        error.response.data
+        error?.response?.data
       );
       toast.error("Failed to fetch tasks");
     }
@@ -51,8 +51,8 @@ const Dashboard = () => {
       const response = await axiosInstance.post("/api/task/create", task);
       const newTask = {
         ...response.data,
-        deadline: response.data.deadline
-          ? new Date(response.data.deadline)
+        deadline: response?.data.deadline
+          ? new Date(response?.data.deadline)
           : null,
       };
       setTasks((prevTasks) => ({
@@ -60,7 +60,7 @@ const Dashboard = () => {
         [task.status]: [...prevTasks[task.status], newTask],
       }));
     } catch (error: any) {
-      console.error("Error creating task:", error.response.data);
+      console.error("Error creating task:", error?.response.data);
       toast.error("Failed to create task");
     }
   };
@@ -76,7 +76,7 @@ const Dashboard = () => {
       });
       toast.success("Task deleted!");
     } catch (error: any) {
-      console.error("Error deleting task:", error.response.data);
+      console.error("Error deleting task:", error?.response.data);
       toast.error("Failed to delete task");
     }
   };
@@ -110,7 +110,7 @@ const Dashboard = () => {
       });
       toast.success("Task updated!");
     } catch (error: any) {
-      console.error("Error editing task:", error.response.data);
+      console.error("Error editing task:", error?.response.data);
       toast.error("Failed to update task");
     }
   };
