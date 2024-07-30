@@ -46,35 +46,25 @@ const SignIn = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signin`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-        credentials: 'include'
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'An unexpected error occurred.');
-      }
-  
-      const data = await response.json();
-      dispatch(setCurrentUser(data));
+      const response = await axiosInstance.post(`/api/auth/signin`, values);
+      dispatch(setCurrentUser(response.data));
       toast.success("User signed in successfully");
       router.push("/");
     } catch (error: any) {
-      console.error("Signin error:", error.message);
-      if (error.message === 'Failed to fetch') {
-        toast.error("Network error. Please check your internet connection.");
+      console.error("Signin error:", error?.response?.data);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
       } else {
-        toast.error(error.message);
+        toast.error("An unexpected error occurred.");
       }
     } finally {
       setIsLoading(false);
     }
-  };  
+  };
 
   return (
     <section className="max-w-[400px] w-full h-fit bg-black-1 p-10 rounded-md flex flex-col gap-4">
@@ -130,7 +120,7 @@ const SignIn = () => {
           </Button>
         </form>
       </Form>
-      <GoogleAuth/>
+      <GoogleAuth />
       <span className="text-white-1 font-medium flex items-center gap-1 text-sm">
         Don&apos;t have an account?{" "}
         <Link
