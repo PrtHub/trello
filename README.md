@@ -1,4 +1,5 @@
-![image](https://github.com/user-attachments/assets/2ae5e0f6-7a1f-4f11-b44a-03c763a8a21e)
+![image](https://github.com/user-attachments/assets/29748268-0681-4cab-9d82-a0d24414efc4)
+
 
 ## Trello-Style Task Management Application
 
