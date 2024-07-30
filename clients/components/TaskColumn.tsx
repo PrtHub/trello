@@ -18,7 +18,7 @@ const TaskColumn = ({
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className="w-[300px] flex flex-col items-start justify-start gap-5 bg-black-1 border border-black-2 px-4 py-4 rounded"
+          className="w-full flex flex-col items-start justify-start gap-5 bg-black-1 border border-black-2 px-4 py-4 rounded"
         >
           <h1 className="text-white-2 text-xl font-medium">
             {status.replace(/-/g, " ")}

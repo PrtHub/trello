@@ -173,7 +173,7 @@ const Dashboard = () => {
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="w-full h-full flex items-start justify-center flex-wrap gap-10"
+              className="w-full h-full grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
             >
               {["To-Do", "In-Progress", "Under-Review", "Completed"].map((status, index) => (
                 <Draggable
