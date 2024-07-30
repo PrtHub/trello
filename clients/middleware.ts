@@ -1,30 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
+// middleware.js
+import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  console.time("middleware");
-  const token = request.cookies.get("trello_token");
-  const url = request.nextUrl.clone();
-
-  console.log(token)
-
-  if (!token) {
-    if (url.pathname !== "/sign-in" && url.pathname !== "/sign-up") {
-      console.timeEnd("middleware");
-      url.pathname = "/sign-in";
-      return NextResponse.redirect(url);
-    }
-  } else {
-    if (url.pathname === "/sign-in" || url.pathname === "/sign-up") {
-      console.timeEnd("middleware");
-      url.pathname = "/";
-      return NextResponse.redirect(url);
-    }
+  const token = request.cookies.get('trello_token');
+  
+  if (!token && !request.nextUrl.pathname.startsWith('/sign-in') && !request.nextUrl.pathname.startsWith('/signup')) {
+    return NextResponse.redirect(new URL('/sign-in', request.url));
   }
-
-  console.timeEnd("middleware");
-  return NextResponse.next();
+  
+  if (token && (request.nextUrl.pathname.startsWith('/sign-in') || request.nextUrl.pathname.startsWith('/sign-up'))) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
 }
 
 export const config = {
-  matcher: ["/", "/sign-in", "/sign-up"],
+  matcher: ['/', '/sign-in', '/sign-up'],
 };

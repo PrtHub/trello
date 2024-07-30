@@ -46,25 +46,35 @@ const SignIn = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.post(`/api/auth/signin`, values);
-      dispatch(setCurrentUser(response.data));
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+        credentials: 'include'
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'An unexpected error occurred.');
+      }
+  
+      const data = await response.json();
+      dispatch(setCurrentUser(data));
       toast.success("User signed in successfully");
       router.push("/");
     } catch (error: any) {
-      console.error("Signin error:", error?.response?.data);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast.error(error.response.data.message);
+      console.error("Signin error:", error.message);
+      if (error.message === 'Failed to fetch') {
+        toast.error("Network error. Please check your internet connection.");
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error(error.message);
       }
     } finally {
       setIsLoading(false);
     }
-  };
+  };  
 
   return (
     <section className="max-w-[400px] w-full h-fit bg-black-1 p-10 rounded-md flex flex-col gap-4">

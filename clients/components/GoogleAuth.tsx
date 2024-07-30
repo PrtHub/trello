@@ -32,7 +32,6 @@ const GoogleAuth = () => {
         toast.success("Signed in!");
       }
       router.push("/");
-      toast.success("Signed in!");
     } catch (error) {
       console.error(error);
     }
